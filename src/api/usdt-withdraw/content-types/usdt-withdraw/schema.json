@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "usdt_withdraws",
+  "info": {
+    "singularName": "usdt-withdraw",
+    "pluralName": "usdt-withdraws",
+    "displayName": "USDT Withdraw",
+    "description": "USDT提现记录"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "usdt_withdraws"
+    },
+    "amount": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "toAddress": {
+      "type": "string",
+      "required": true
+    },
+    "txHash": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "processing",
+        "success",
+        "failed"
+      ],
+      "default": "pending",
+      "required": true
+    },
+    "fee": {
+      "type": "decimal",
+      "default": 0,
+      "min": 0
+    },
+    "memo": {
+      "type": "text"
+    }
+  }
+} 

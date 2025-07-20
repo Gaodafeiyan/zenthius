@@ -1,0 +1,79 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wallet_txs",
+  "info": {
+    "singularName": "wallet-tx",
+    "pluralName": "wallet-txs",
+    "displayName": "Wallet Transaction",
+    "description": "钱包交易记录"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "txType": {
+      "type": "enumeration",
+      "enum": [
+        "deposit",
+        "usdt_withdraw",
+        "subscription_buy",
+        "subscription_redeem",
+        "referral_reward",
+        "lottery_prize",
+        "airdrop"
+      ],
+      "required": true
+    },
+    "direction": {
+      "type": "enumeration",
+      "enum": [
+        "in",
+        "out"
+      ],
+      "required": true
+    },
+    "amountUSDT": {
+      "type": "decimal",
+      "required": true
+    },
+    "amountToken": {
+      "type": "decimal",
+      "min": 0
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "wallet_txs"
+    },
+    "relatedOrder": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::subscription-order.subscription-order",
+      "inversedBy": "wallet_txs"
+    },
+    "walletBalance": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::wallet-balance.wallet-balance",
+      "inversedBy": "wallet_txs"
+    },
+    "txHash": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "success",
+        "failed"
+      ],
+      "default": "pending",
+      "required": true
+    },
+    "memo": {
+      "type": "text"
+    }
+  }
+} 

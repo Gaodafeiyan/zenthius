@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wallet_balances",
+  "info": {
+    "singularName": "wallet-balance",
+    "pluralName": "wallet-balances",
+    "displayName": "Wallet Balance",
+    "description": "用户钱包余额"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "wallet_balance"
+    },
+    "usdtBalance": {
+      "type": "decimal",
+      "default": 0,
+      "min": 0
+    },
+    "aiTokenBalance": {
+      "type": "decimal",
+      "default": 0,
+      "min": 0
+    },
+    "wallet_txs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::wallet-tx.wallet-tx",
+      "mappedBy": "walletBalance"
+    }
+  }
+} 

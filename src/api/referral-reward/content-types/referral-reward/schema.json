@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "referral_rewards",
+  "info": {
+    "singularName": "referral-reward",
+    "pluralName": "referral-rewards",
+    "displayName": "Referral Reward",
+    "description": "邀请返佣记录"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "referrer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "referral_rewards"
+    },
+    "fromUser": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "from_referral_rewards"
+    },
+    "fromOrder": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::subscription-order.subscription-order",
+      "inversedBy": "referral_rewards"
+    },
+    "amountUSDT": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "createdAt": {
+      "type": "date",
+      "required": true
+    }
+  }
+} 
