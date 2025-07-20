@@ -24,14 +24,14 @@ export default factories.createCoreService('api::wallet-balance.wallet-balance',
     const updatedBalance = await strapi.entityService.update('api::wallet-balance.wallet-balance', balance.id, {
       data: {
         usdtBalance: newBalance.toNumber(),
-      },
+      } as any,
     });
 
     // 同步更新用户表中的冗余字段
     await strapi.entityService.update('plugin::users-permissions.user', userId, {
       data: {
         walletBalanceUSDT: newBalance.toNumber(),
-      },
+      } as any,
     });
 
     // 记录交易
@@ -67,7 +67,7 @@ export default factories.createCoreService('api::wallet-balance.wallet-balance',
     const updatedBalance = await strapi.entityService.update('api::wallet-balance.wallet-balance', balance.id, {
       data: {
         aiTokenBalance: newBalance.toNumber(),
-      },
+      } as any,
     });
 
     // 记录交易
@@ -131,7 +131,7 @@ export default factories.createCoreService('api::wallet-balance.wallet-balance',
       // 获取所有用户
       const users = await strapi.entityService.findMany('plugin::users-permissions.user');
       
-      for (const user of users) {
+      for (const user of users as any[]) {
         const depositAddress = await this.getDepositAddress(user.id);
         
         // 扫描最近100个区块的交易
@@ -144,7 +144,7 @@ export default factories.createCoreService('api::wallet-balance.wallet-balance',
         
         for (const event of events) {
           const txHash = event.transactionHash;
-          const amount = ethers.formatUnits(event.args.value, 18); // USDT 18位小数
+          const amount = ethers.formatUnits((event as any).args.value, 18); // USDT 18位小数
           
           // 检查是否已处理
           const existingTx = await strapi.entityService.findMany('api::wallet-tx.wallet-tx', {
@@ -194,7 +194,7 @@ export default factories.createCoreService('api::wallet-balance.wallet-balance',
         filters: { status: 'pending' }
       });
       
-      for (const withdraw of pendingWithdraws) {
+      for (const withdraw of pendingWithdraws as any[]) {
         try {
           // 检查热钱包余额
           const hotWalletBalance = await usdtContract.balanceOf(hotWallet.address);
@@ -202,7 +202,7 @@ export default factories.createCoreService('api::wallet-balance.wallet-balance',
           
           if (hotWalletBalance >= withdrawAmount) {
             // 执行转账
-            const tx = await usdtContract.connect(hotWallet).transfer(
+            const tx = await (usdtContract as any).connect(hotWallet).transfer(
               withdraw.toAddress, 
               withdrawAmount
             );
@@ -214,7 +214,7 @@ export default factories.createCoreService('api::wallet-balance.wallet-balance',
               data: {
                 status: 'success',
                 txHash: receipt.hash
-              }
+              } as any
             });
             
             console.log(`✅ 提现成功: ${withdraw.amount}U → ${withdraw.toAddress}`);
@@ -226,7 +226,7 @@ export default factories.createCoreService('api::wallet-balance.wallet-balance',
           
           // 更新状态为失败
           await strapi.entityService.update('api::usdt-withdraw.usdt-withdraw', withdraw.id, {
-            data: { status: 'failed' }
+            data: { status: 'failed' } as any
           });
         }
       }

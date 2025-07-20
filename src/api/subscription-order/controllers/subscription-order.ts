@@ -64,8 +64,8 @@ export default factories.createCoreController('api::subscription-order.subscript
       populate: ['plan'],
       sort: { createdAt: 'desc' },
       pagination: {
-        page: parseInt(page),
-        pageSize: parseInt(pageSize),
+        page: parseInt(page as string),
+        pageSize: parseInt(pageSize as string),
       },
     });
     

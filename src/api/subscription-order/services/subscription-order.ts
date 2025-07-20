@@ -132,30 +132,30 @@ export default factories.createCoreService('api::subscription-order.subscription
         },
       });
       
-      // 更新用户累计返佣
+            // 更新用户累计返佣
       await strapi.entityService.update('plugin::users-permissions.user', order.user.invitedBy.id, {
         data: {
-          totalInviteEarningUSDT: new Decimal(order.user.invitedBy.totalInviteEarningUSDT || 0)
+          totalInviteEarningUSDT: new Decimal((order.user.invitedBy as any)?.totalInviteEarningUSDT || 0)
             .plus(referralAmount)
             .toNumber(),
-        },
+        } as any,
       });
     }
     
     // 更新用户累计静态收益
     await strapi.entityService.update('plugin::users-permissions.user', order.user.id, {
       data: {
-        totalStaticEarningUSDT: new Decimal(order.user.totalStaticEarningUSDT || 0)
+        totalStaticEarningUSDT: new Decimal((order.user as any)?.totalStaticEarningUSDT || 0)
           .plus(order.staticYieldUSDT)
           .toNumber(),
-      },
+      } as any,
     });
     
     // 增加抽奖次数
     await strapi.entityService.update('plugin::users-permissions.user', order.user.id, {
       data: {
-        lotterySpinQuota: (order.user.lotterySpinQuota || 0) + order.plan.spinQuota,
-      },
+        lotterySpinQuota: ((order.user as any)?.lotterySpinQuota || 0) + order.plan.spinQuota,
+      } as any,
     });
     
     // 更新订单状态
@@ -163,7 +163,7 @@ export default factories.createCoreService('api::subscription-order.subscription
       data: {
         state: 'redeemed',
         spinQuotaGranted: true,
-      },
+      } as any,
     });
     
     return updatedOrder;
@@ -179,11 +179,11 @@ export default factories.createCoreService('api::subscription-order.subscription
       populate: ['user', 'plan'],
     });
     
-    for (const order of dueOrders) {
+    for (const order of dueOrders as any[]) {
       try {
         // 将订单状态改为到期
         await strapi.entityService.update('api::subscription-order.subscription-order', order.id, {
-          data: { state: 'due' },
+          data: { state: 'due' } as any,
         });
       } catch (error) {
         console.error(`Error processing due order ${order.id}:`, error);
